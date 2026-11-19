@@ -13,7 +13,7 @@ namespace minimal_api.Domain.Services
     {
         private readonly DbContexto _contexto;
 
-        VeiculoService(DbContexto contexto)
+        public VeiculoService(DbContexto contexto)
         {
             _contexto = contexto;
         }
@@ -32,7 +32,7 @@ namespace minimal_api.Domain.Services
 
         public Veiculo? BuscaPorId(int id)
         {
-                return _contexto.Veiculos.Where(v => v.Id == id).FirstOrDefault();
+            return _contexto.Veiculos.Where(v => v.Id == id).FirstOrDefault();
         }
 
         public void Salvar(Veiculo veiculo)
@@ -41,17 +41,21 @@ namespace minimal_api.Domain.Services
             _contexto.SaveChanges();
         }
 
-        public List<Veiculo> TodosVeiculos(int pagina = 1, string? nome = null, string? marca = null)
+        public List<Veiculo> TodosVeiculos(int? pagina = 1, string? nome = null, string? marca = null)
         {
             var query = _contexto.Veiculos.AsQueryable();
-            if(!string.IsNullOrEmpty(nome)){
-                query = query.Where(v => EF.Functions.Like(v.Nome.ToLower(),$"%{nome}%") );
+            if (!string.IsNullOrEmpty(nome))
+            {
+                query = query.Where(v => EF.Functions.Like(v.Nome.ToLower(), $"%{nome}%"));
             }
 
             int itensPorPagina = 10;
 
-            query = query.Skip((pagina-1) * itensPorPagina).Take(itensPorPagina);
-            return query.ToList();
+            if (pagina != null)
+            {
+                query = query.Skip(((int)pagina - 1) * itensPorPagina).Take(itensPorPagina);
+            }
+                return query.ToList();
         }
     }
 }

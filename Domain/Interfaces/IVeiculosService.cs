@@ -8,7 +8,7 @@ namespace minimal_api.Domain.Interfaces
 {
     public interface IVeiculosService
     {
-        List<Veiculo> TodosVeiculos(int pagina=1, string? nome =null, string? marca =null);
+        List<Veiculo> TodosVeiculos(int? pagina=1, string? nome =null, string? marca =null);
         Veiculo? BuscaPorId(int id);
         void Salvar(Veiculo veiculo);
         void Atualizar(Veiculo veiculo);
